@@ -1,3 +1,3 @@
-# D3 Study
+# TensorFlow Study
 
-Stores all the codes that I learn about D3.
+Stores all the codes that I learn about TensorFlow.
