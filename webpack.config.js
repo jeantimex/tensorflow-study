@@ -1,3 +1,4 @@
+const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const fs = require("fs");
@@ -84,6 +85,25 @@ for (const file of apps) {
       htmlWebpackConfig.template = srcDir + "/" + file + "/index.html";
     }
 
+    const plugins = [
+      new MiniCssExtractPlugin({ filename: "bundle.css" }),
+      new HtmlWebpackPlugin(htmlWebpackConfig),
+    ];
+
+    if (fs.existsSync(srcDir + "/" + file + "/assets")) {
+      plugins.push(
+        new CopyPlugin({
+          patterns: [
+            {
+              context: `src/${file}`,
+              from: `assets`,
+              to: `assets`,
+            },
+          ],
+        })
+      );
+    }
+
     const config = Object.assign({}, common, {
       name: file,
       entry: path.resolve(__dirname, "src", file, "index.ts"),
@@ -92,10 +112,7 @@ for (const file of apps) {
         publicPath: "/" + file,
         filename: "bundle.js",
       },
-      plugins: [
-        new HtmlWebpackPlugin(htmlWebpackConfig),
-        new MiniCssExtractPlugin({ filename: "bundle.css" }),
-      ],
+      plugins,
     });
 
     configs.push(config);
