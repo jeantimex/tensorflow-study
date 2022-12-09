@@ -2,6 +2,8 @@ import { Assets } from "./types";
 import { createCanvas, loadImage } from "./util";
 
 export class App {
+  private assets: Assets;
+  private canvas: HTMLCanvasElement;
   private fps: number;
   private then: number;
 
@@ -11,17 +13,9 @@ export class App {
   }
 
   public async run() {
-    const assets = await this.loadAssets();
-    this.setup(assets);
-    this.draw();
-  }
-
-  private setup(assets: Assets) {
-    const canvas = createCanvas({
-      width: assets.background.width,
-      height: assets.background.height,
-    });
-    document.body.append(canvas);
+    this.assets = await this.loadAssets();
+    this.setup();
+    this.loop();
   }
 
   private async loadAssets() {
@@ -34,16 +28,37 @@ export class App {
     };
   }
 
+  private setup() {
+    if (!this.assets) return;
+
+    this.canvas = createCanvas({
+      width: this.assets.background.width,
+      height: this.assets.background.height,
+    });
+    document.body.append(this.canvas);
+  }
+
   private draw() {
+    if (!this.assets || !this.canvas) return;
+
+    const context = this.canvas.getContext("2d");
+
+    context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    context.drawImage(this.assets.background, 0, 0);
+  }
+
+  private loop() {
     const now = Date.now();
     const delta = now - this.then;
+    const interval = 1000 / this.fps;
 
-    if (delta > 1000 / this.fps) {
-      // update time stuffs
-
+    // Control the FPS.
+    if (delta > interval) {
       // Calculate fps
-      const fps = Math.round(1000 / delta);
-      console.log(fps);
+      // const currentFps = Math.round(1000 / delta);
+      // console.log(currentFps);
+
+      // update time stuffs
 
       // Just `then = now` is not enough.
       // Lets say we set fps at 10 which means
@@ -57,13 +72,14 @@ export class App {
       // by subtracting delta (112) % interval (100).
       // Hope that makes sense.
 
-      this.then = now - (delta % (1000 / this.fps));
+      this.then = now - (delta % interval);
 
       // ... Code for Drawing the Frame ...
+      this.draw();
     }
 
     requestAnimationFrame(() => {
-      this.draw();
+      this.loop();
     });
   }
 }
