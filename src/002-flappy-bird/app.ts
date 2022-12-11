@@ -1,11 +1,13 @@
 import { Assets } from "./types";
 import { BackgroundManager } from "./background_manager";
+import { FpsMeter } from "./fps_meter";
 import { PipeManager } from "./pipe_manager";
 import { createCanvas, loadImage } from "./util";
 
 export class App {
   private backgroundManager: BackgroundManager;
   private pipeManager: PipeManager;
+  private fpsMeter: FpsMeter;
 
   public async run() {
     const assets = await this.loadAssets();
@@ -13,6 +15,7 @@ export class App {
 
     this.backgroundManager = new BackgroundManager(assets, canvas);
     this.pipeManager = new PipeManager(assets, canvas);
+    this.fpsMeter = new FpsMeter(canvas);
 
     this.draw();
   }
@@ -39,6 +42,7 @@ export class App {
   private draw() {
     this.backgroundManager.update();
     this.pipeManager.update();
+    this.fpsMeter.update();
 
     requestAnimationFrame(() => {
       this.draw();
