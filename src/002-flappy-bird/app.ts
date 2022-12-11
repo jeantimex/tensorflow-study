@@ -17,7 +17,7 @@ export class App {
     this.pipeManager = new PipeManager(assets, canvas);
     this.fpsMeter = new FpsMeter(canvas);
 
-    this.draw();
+    this.loop();
   }
 
   private async loadAssets() {
@@ -39,13 +39,13 @@ export class App {
     return canvas;
   }
 
-  private draw() {
+  private loop() {
     this.backgroundManager.update();
     this.pipeManager.update();
     this.fpsMeter.update();
 
     requestAnimationFrame(() => {
-      this.draw();
+      this.loop();
     });
   }
 }
