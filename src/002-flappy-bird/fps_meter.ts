@@ -1,9 +1,11 @@
 export class FpsMeter {
   private context: CanvasRenderingContext2D;
   private previousTime: number;
+  private maxFps: number;
 
   constructor(canvas: HTMLCanvasElement) {
     this.context = canvas.getContext("2d");
+    this.maxFps = 60;
   }
 
   public update() {
@@ -13,6 +15,9 @@ export class FpsMeter {
     }
 
     const currentTime = performance.now();
+
+    if (currentTime - this.previousTime < 1000 / this.maxFps) return;
+
     const delta = (currentTime - this.previousTime) / 1000;
     const fps = Math.round(1 / delta);
 

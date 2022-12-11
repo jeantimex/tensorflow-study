@@ -16,7 +16,7 @@ export class Pipe {
     this.assets = assets;
     this.canvas = canvas;
     this.x = x;
-    this.speed = 5;
+    this.speed = 1;
     this.gap = random(80, 150);
     this.pipeTopY = random(0, -this.assets.pipeTop.height + 50);
     this.pipeBottomY = this.pipeTopY + this.assets.pipeTop.height + this.gap;
