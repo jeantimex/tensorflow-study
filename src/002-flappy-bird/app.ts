@@ -1,11 +1,20 @@
 import { Assets } from "./types";
+import { BackgroundManager } from "./background_manager";
+import { PipeManager } from "./pipe_manager";
 import { createCanvas, loadImage } from "./util";
 
 export class App {
+  private backgroundManager: BackgroundManager;
+  private pipeManager: PipeManager;
+
   public async run() {
     const assets = await this.loadAssets();
     const canvas = this.setupCanvas(assets);
-    this.draw(assets, canvas);
+
+    this.backgroundManager = new BackgroundManager(assets, canvas);
+    this.pipeManager = new PipeManager(assets, canvas);
+
+    this.draw();
   }
 
   private async loadAssets() {
@@ -27,14 +36,12 @@ export class App {
     return canvas;
   }
 
-  private draw(assets: Assets, canvas: HTMLCanvasElement) {
-    const context = canvas.getContext("2d");
-
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(assets.background, 0, 0);
+  private draw() {
+    this.backgroundManager.update();
+    this.pipeManager.update();
 
     requestAnimationFrame(() => {
-      this.draw(assets, canvas);
+      this.draw();
     });
   }
 }
