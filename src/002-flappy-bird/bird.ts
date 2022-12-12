@@ -3,13 +3,14 @@ import { Assets } from "./types";
 export class Bird {
   private assets: Assets;
   private canvas: HTMLCanvasElement;
-  private width: number;
-  private height: number;
   private gravity: number;
   private upLift: number;
   private velocity: number;
-  private x: number;
-  private y: number;
+
+  public width: number;
+  public height: number;
+  public x: number;
+  public y: number;
 
   constructor(assets: Assets, canvas: HTMLCanvasElement, x: number, y: number) {
     this.assets = assets;
@@ -35,9 +36,9 @@ export class Bird {
     this.velocity += this.gravity;
     this.velocity *= 0.9;
     this.y += this.velocity;
-    this.y = Math.min(
-      Math.max(0, this.y),
-      this.assets.background.height - this.height
-    );
+  }
+
+  public isOutOfScreen() {
+    return this.y < 0 || this.y > this.assets.background.height - this.height;
   }
 }

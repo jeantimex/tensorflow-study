@@ -27,7 +27,7 @@ export class App {
       this.handleKeyDown(event);
     });
 
-    this.loop();
+    this.loop(assets, canvas);
   }
 
   private async loadAssets() {
@@ -69,19 +69,28 @@ export class App {
     }
   }
 
-  private loop() {
+  private loop(assets: Assets, canvas: HTMLCanvasElement) {
     this.backgroundManager.update();
     this.pipeManager.update();
 
     for (let i = this.currentBirds.length - 1; i >= 0; i--) {
       const bird = this.currentBirds[i];
       bird.update();
+
+      if (bird.isOutOfScreen() || this.pipeManager.collidesWithBird(bird)) {
+        this.currentBirds.splice(i, 1);
+      }
+    }
+
+    if (this.currentBirds.length === 0) {
+      this.pipeManager.reset();
+      this.currentBirds = this.createBirds(assets, canvas);
     }
 
     this.fpsMeter.update();
 
     requestAnimationFrame(() => {
-      this.loop();
+      this.loop(assets, canvas);
     });
   }
 }
