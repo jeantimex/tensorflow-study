@@ -1,13 +1,17 @@
 import { Assets } from "./types";
 import { BackgroundManager } from "./background_manager";
+import { Bird } from "./bird";
 import { FpsMeter } from "./fps_meter";
 import { PipeManager } from "./pipe_manager";
-import { createCanvas, loadImage } from "./util";
+import { createCanvas, loadImage, random } from "./util";
+
+const POPULATION = 1;
 
 export class App {
   private backgroundManager: BackgroundManager;
   private pipeManager: PipeManager;
   private fpsMeter: FpsMeter;
+  private currentBirds: Array<Bird>;
 
   public async run() {
     const assets = await this.loadAssets();
@@ -15,7 +19,13 @@ export class App {
 
     this.backgroundManager = new BackgroundManager(assets, canvas);
     this.pipeManager = new PipeManager(assets, canvas);
+    this.currentBirds = this.createBirds(assets, canvas);
     this.fpsMeter = new FpsMeter(canvas);
+
+    // Listen for keyboard strokes
+    window.addEventListener("keydown", (event: KeyboardEvent) => {
+      this.handleKeyDown(event);
+    });
 
     this.loop();
   }
@@ -39,9 +49,35 @@ export class App {
     return canvas;
   }
 
+  private createBirds(assets: Assets, canvas: HTMLCanvasElement): Array<Bird> {
+    const birds: Array<Bird> = [];
+
+    for (let i = 0; i < POPULATION; i++) {
+      const x = 50;
+      const canvasHeight = assets.background.height;
+      const y = canvasHeight / 2;
+      const bird = new Bird(assets, canvas, x, y);
+      birds.push(bird);
+    }
+
+    return birds;
+  }
+
+  private handleKeyDown(event: KeyboardEvent) {
+    for (const bird of this.currentBirds) {
+      bird.jump();
+    }
+  }
+
   private loop() {
     this.backgroundManager.update();
     this.pipeManager.update();
+
+    for (let i = this.currentBirds.length - 1; i >= 0; i--) {
+      const bird = this.currentBirds[i];
+      bird.update();
+    }
+
     this.fpsMeter.update();
 
     requestAnimationFrame(() => {
