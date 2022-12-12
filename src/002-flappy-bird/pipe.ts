@@ -1,4 +1,5 @@
 import { Assets } from "./types";
+import { Bird } from "./bird";
 import { random } from "./util";
 
 export class Pipe {
@@ -7,11 +8,12 @@ export class Pipe {
   private gap: number;
   private pipeTopY: number;
   private pipeBottomY: number;
+  private pipeTopBottomY: number;
+  private pipeBottomTopY: number;
+  private width: number;
+  private hasPassed: boolean;
 
-  public pipeTopBottomY: number;
-  public pipeBottomTopY: number;
   public x: number;
-  public width: number;
 
   constructor(assets: Assets, canvas: HTMLCanvasElement, x: number) {
     this.assets = assets;
@@ -26,6 +28,8 @@ export class Pipe {
 
     this.pipeTopBottomY = this.pipeTopY + this.assets.pipeTop.height;
     this.pipeBottomTopY = this.pipeBottomY;
+
+    this.hasPassed = false;
   }
 
   public update() {
@@ -36,5 +40,25 @@ export class Pipe {
 
     const speed = 1;
     this.x -= speed;
+  }
+
+  public isCollidedWithBird(bird: Bird) {
+    if (bird.x + bird.width >= this.x && bird.x <= this.x + this.width) {
+      if (
+        bird.y <= this.pipeTopBottomY ||
+        bird.y + bird.height >= this.pipeBottomTopY
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public pass(x: number): boolean {
+    if (this.x + this.width < x && !this.hasPassed) {
+      this.hasPassed = true;
+      return true;
+    }
+    return false;
   }
 }

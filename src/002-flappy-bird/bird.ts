@@ -11,6 +11,7 @@ export class Bird {
   public height: number;
   public x: number;
   public y: number;
+  public score: number;
 
   constructor(assets: Assets, canvas: HTMLCanvasElement, x: number, y: number) {
     this.assets = assets;
@@ -22,6 +23,7 @@ export class Bird {
     this.velocity = 0;
     this.x = x;
     this.y = y;
+    this.score = 0;
   }
 
   public jump() {

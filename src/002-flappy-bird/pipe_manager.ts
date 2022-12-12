@@ -16,8 +16,8 @@ export class PipeManager {
 
   public reset() {
     this.pipes = [];
-    this.addPipe();
   }
+
   private addPipe() {
     const { width } = this.assets.background;
     const pipe = new Pipe(this.assets, this.canvas, width);
@@ -25,8 +25,15 @@ export class PipeManager {
     this.pipes.push(pipe);
   }
 
+  public getPipes(): Array<Pipe> {
+    return this.pipes;
+  }
+
   public update() {
-    if (this.pipes.length <= 0) return;
+    if (this.pipes.length <= 0) {
+      this.addPipe();
+      return;
+    }
 
     for (const pipe of this.pipes) {
       pipe.update();
@@ -41,26 +48,5 @@ export class PipeManager {
     if (firstPipe.x < -this.assets.pipeTop.width) {
       this.pipes.shift();
     }
-  }
-
-  public collidesWithBird(bird: Bird): Boolean {
-    for (const pipe of this.pipes) {
-      if (this.isPipeCollidedWithBird(pipe, bird)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private isPipeCollidedWithBird(pipe: Pipe, bird: Bird): Boolean {
-    if (bird.x + bird.width >= pipe.x && bird.x <= pipe.x + pipe.width) {
-      if (
-        bird.y <= pipe.pipeTopBottomY ||
-        bird.y + bird.height >= pipe.pipeBottomTopY
-      ) {
-        return true;
-      }
-    }
-    return false;
   }
 }

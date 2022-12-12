@@ -77,8 +77,19 @@ export class App {
       const bird = this.currentBirds[i];
       bird.update();
 
-      if (bird.isOutOfScreen() || this.pipeManager.collidesWithBird(bird)) {
+      if (bird.isOutOfScreen()) {
         this.currentBirds.splice(i, 1);
+        continue;
+      }
+
+      const pipes = this.pipeManager.getPipes();
+      for (const pipe of pipes) {
+        if (pipe.isCollidedWithBird(bird)) {
+          this.currentBirds.splice(i, 1);
+        } else if (pipe.pass(bird.x)) {
+          bird.score++;
+          console.log(bird.score);
+        }
       }
     }
 
