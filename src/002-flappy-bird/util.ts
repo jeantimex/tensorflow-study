@@ -26,7 +26,20 @@ export function createCanvas(options: CanvasOptions): HTMLCanvasElement {
   return canvas;
 }
 
-export function random(min: number, max: number) {
+export function random(min?: number, max?: number) {
+  if (min == null) {
+    return Math.random();
+  }
+
+  if (max == null) {
+    return Math.random() * min;
+  }
+
+  if (min > max) {
+    const temp = min;
+    min = max;
+    max = temp;
+  }
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1) + min);

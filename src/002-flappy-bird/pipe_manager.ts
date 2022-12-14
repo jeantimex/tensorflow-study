@@ -1,5 +1,4 @@
 import { Assets } from "./types";
-import { Bird } from "./bird";
 import { Pipe } from "./pipe";
 import { random } from "./util";
 

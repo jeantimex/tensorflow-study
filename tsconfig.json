@@ -7,9 +7,6 @@
     "target": "es5",
     "allowJs": true,
     "moduleResolution": "node",
-    "typeRoots": [
-        "./node_modules/@types",
-        "./typings"
-    ]
+    "typeRoots": ["./node_modules/@types", "./typings"]
   }
 }

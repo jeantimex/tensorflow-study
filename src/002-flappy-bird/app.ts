@@ -3,7 +3,7 @@ import { BackgroundManager } from "./background_manager";
 import { Bird } from "./bird";
 import { FpsMeter } from "./fps_meter";
 import { PipeManager } from "./pipe_manager";
-import { createCanvas, loadImage, random } from "./util";
+import { createCanvas, loadImage } from "./util";
 
 const POPULATION = 1;
 
@@ -63,7 +63,7 @@ export class App {
     return birds;
   }
 
-  private handleKeyDown(event: KeyboardEvent) {
+  private handleKeyDown() {
     for (const bird of this.currentBirds) {
       bird.jump();
     }
@@ -88,7 +88,6 @@ export class App {
           this.currentBirds.splice(i, 1);
         } else if (pipe.pass(bird.x)) {
           bird.score++;
-          console.log(bird.score);
         }
       }
     }
