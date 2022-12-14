@@ -63,7 +63,9 @@ export class App {
     return birds;
   }
 
-  private handleKeyDown() {
+  private handleKeyDown(event: KeyboardEvent) {
+    if (event.code !== "Space") return;
+
     for (const bird of this.currentBirds) {
       bird.jump();
     }
